@@ -74,7 +74,9 @@ namespace Trace.ViewModels
             MenuBars.Add(new MenuBar() { Icon = "Home", Title = "首页", NameSpace = "IndexView" });
             MenuBars.Add(new MenuBar() { Icon = "NotebookOutline", Title = "货车", NameSpace = "TruckView" });
             MenuBars.Add(new MenuBar() { Icon = "NotebookPlus", Title = "任务", NameSpace = "MissionView" });
+            MenuBars.Add(new MenuBar() { Icon = "Cog", Title = "用户", NameSpace = "UserView" });
             MenuBars.Add(new MenuBar() { Icon = "Cog", Title = "设置", NameSpace = "SettingsView" });
+           
         }
 
         /// <summary>

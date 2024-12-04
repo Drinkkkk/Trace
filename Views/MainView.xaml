@@ -35,7 +35,7 @@
                         <Image
                             Width="50"
                             Height="50"                         
-                            Source="/Images/user.jpg">
+                            Source="/Images/cat.jpg">
                             <Image.Clip>
                                 <EllipseGeometry
                                     Center="25,25"
@@ -106,7 +106,7 @@
                                 <Image
                                 Width="25"
                                 Height="25"
-                                Source="/Images/user.jpg">
+                                Source="/Images/cat.jpg">
                                     <Image.Clip>
                                         <EllipseGeometry
                                         Center="12.5,12.5"

@@ -10,8 +10,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\cat.jpg" />
     <None Remove="Images\login.png" />
-    <None Remove="Images\user.jpg" />
     <None Remove="Images\wind.png" />
     <None Remove="Views\user.jpg" />
   </ItemGroup>
@@ -22,8 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Images\cat.jpg" />
     <Resource Include="Images\login.png" />
-    <Resource Include="Images\user.jpg" />
     <Resource Include="Images\wind.png" />
   </ItemGroup>
 

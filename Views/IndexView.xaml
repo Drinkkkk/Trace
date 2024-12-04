@@ -25,10 +25,10 @@
 
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Border Background="{Binding Color}" Margin="10" CornerRadius="5">
+                        <Border Background="{Binding Color}" Margin="10" CornerRadius="5" Style="{StaticResource shadow}">
                             <Grid>
                                 <StackPanel Margin="20,10">
-                                    <materialdesign:PackIcon Margin="15,0" Kind="{Binding Icon}" Width="30" Height="30"/>
+                                    <materialdesign:PackIcon  Kind="{Binding Icon}" Width="30" Height="30"/>
                                     <TextBlock Text="{Binding Title}" Margin="0,15" FontSize="15"/>
                                     <TextBlock Text="{Binding Content}" FontWeight="Bold"  FontSize="40"/>
                                 </StackPanel>
@@ -59,34 +59,19 @@
                     <Button Content="+" HorizontalAlignment="Right" DockPanel.Dock="Top" 
                             Style="{StaticResource MaterialDesignFloatingActionButton}" Width="30" Height="30"/>
                 </DockPanel>
-                <ListBox ItemsSource="{Binding Missions}" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                <ListBox ItemsSource="{Binding Missions}" ScrollViewer.VerticalScrollBarVisibility="Hidden" HorizontalContentAlignment="Stretch">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Id}"/>
+                            
+                            <DockPanel MaxHeight="80" LastChildFill="False">
+                                <ToggleButton DockPanel.Dock="Right"/>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Id}"/>
+                                </StackPanel>
+                            </DockPanel>
+                           
                         </DataTemplate>
                     </ListBox.ItemTemplate>
-                    <ListBox.ItemContainerStyle>
-                        <Style TargetType="ListBoxItem">
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="ListBoxItem">
-                                        <Border Background="LightGoldenrodYellow" 
-                            Padding="15" Margin="5" CornerRadius="10"  > 
-                                            <ContentPresenter/>
-                                        </Border>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </ListBox.ItemContainerStyle>
-                    <ListBox.Template>
-                        <ControlTemplate>
-                            <Border >
-                                <ItemsPresenter/>
-                            </Border>
-                        </ControlTemplate>
-                    </ListBox.Template>
-                    
                 </ListBox>
             </DockPanel>
 
@@ -100,10 +85,16 @@
                         <materialdesign:PackIcon Kind="Add"/>
                     </Button>
                 </DockPanel>
-                <ListBox ItemsSource="{Binding Trucks}"  ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                <ListBox ItemsSource="{Binding Trucks}"  ScrollViewer.VerticalScrollBarVisibility="Hidden" HorizontalContentAlignment="Stretch">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Id}"/>
+                            <DockPanel MaxHeight="80" LastChildFill="False">
+                                <ToggleButton DockPanel.Dock="Right"/>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Id}"/>
+                                </StackPanel>
+                            </DockPanel>
+                           
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>

@@ -23,6 +23,7 @@ namespace Trace
             containerRegistry.RegisterForNavigation<IndexView, IndexViewModel>();
             containerRegistry.RegisterForNavigation<MissionView, MissionViewModel>();
             containerRegistry.RegisterForNavigation<SettingView, SettingViewModel>();
+            containerRegistry.RegisterForNavigation<UserView, UserViewModel>();
         }
     }
 

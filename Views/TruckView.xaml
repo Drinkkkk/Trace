@@ -5,8 +5,105 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Trace.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
-    </Grid>
+             d:DesignHeight="450" d:DesignWidth="800"
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             >
+    <md:DialogHost>
+        <md:DrawerHost IsRightDrawerOpen="{Binding IsRightOpen}">
+            <md:DrawerHost.RightDrawerContent>
+                <DockPanel Width="300" LastChildFill="False">
+                    <TextBlock
+         Padding="20,10"
+         DockPanel.Dock="Top"
+         FontSize="20"
+         FontWeight="Bold"
+         Text="添加货车" />
+
+                    <StackPanel
+         Margin="20"
+         DockPanel.Dock="Top"
+         Orientation="Horizontal">
+                        <TextBlock VerticalAlignment="Center" Text="状态：" />
+                        <ComboBox SelectedIndex="{Binding CurrentDto.Status}">
+                            <ComboBoxItem>待办</ComboBoxItem>
+                            <ComboBoxItem>已完成</ComboBoxItem>
+                        </ComboBox>
+                    </StackPanel>
+                    <TextBox Text="{Binding CurrentDto.Title}"
+         Margin="20,0"
+         md:HintAssist.Hint="请输入待办概要"
+         DockPanel.Dock="Top" />
+                    <TextBox  Text="{Binding CurrentDto.Content}"
+         MinHeight="100"
+         Margin="20"
+         md:HintAssist.Hint="请输入待办内容"
+         DockPanel.Dock="Top" />
+                    <Button Command="{Binding ExecuteCommand}"
+             CommandParameter="保存"
+         Margin="20,0"
+         Content="添加到待办"
+         DockPanel.Dock="Top" />
+                </DockPanel>
+            </md:DrawerHost.RightDrawerContent>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <DockPanel LastChildFill="False">
+                    <TextBox md:HintAssist.Hint="查找货车..." Width="150" md:TextFieldAssist.HasClearButton="True" Margin="10"  FontSize="15"/>
+                    <TextBlock Text="筛选:" VerticalAlignment="Center" Margin="0,0,10,0" FontSize="15"/>
+                    <ComboBox Width="80" FontSize="15">
+                        <ComboBoxItem Content="全部"/>
+                        <ComboBoxItem Content="未完成"/>
+                        <ComboBoxItem Content="已完成"/>
+                    </ComboBox>
+                    <Button Content="+添加货车" DockPanel.Dock="Right" Margin="10" Name="addbt" Command="{Binding ADD}"/>
+                </DockPanel>
+                <ScrollViewer Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                    <ItemsControl  ItemsSource="{Binding Trucks}" HorizontalAlignment="Center">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <md:TransitioningContent OpeningEffect="{md:TransitionEffect Kind=ExpandIn}">
+                                    <Grid Width="200" Height="150" Margin="10"  >
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="auto"/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Padding="10,5" Text="{Binding Title}" Panel.ZIndex="1"/>
+                                        <TextBlock  Padding="10,5" Text="{Binding Content}" Grid.Row="1" Panel.ZIndex="1"/>
+                                        <Border Background="#CD5B49" CornerRadius="5" Grid.RowSpan="2">
+
+                                        </Border>
+                                        <md:PopupBox HorizontalAlignment="Right" Panel.ZIndex="1">
+                                            <Button Content="删除" />
+                                        </md:PopupBox>
+
+                                        <Canvas ClipToBounds="True" Grid.RowSpan="2">
+                                            <Border Canvas.Top="10" Canvas.Right="-50" 
+Width="120" Height="120"
+Background="#FFFFFF" Opacity="0.1" CornerRadius="100"/>
+                                            <Border Canvas.Top="50" Canvas.Right="-30" 
+Width="120" Height="120"
+Background="#FFFFFF" Opacity="0.1" CornerRadius="100"/>
+                                        </Canvas>
+                                    </Grid>
+                                </md:TransitioningContent>
+                               
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+
+
+            </Grid>
+        </md:DrawerHost>
+    </md:DialogHost>
+    
 </UserControl>
