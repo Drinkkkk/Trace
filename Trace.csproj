@@ -18,7 +18,9 @@
 
   <ItemGroup>
     <PackageReference Include="MaterialDesignThemes" Version="5.1.1-ci795" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Prism.DryIoc" Version="9.0.537" />
+    <PackageReference Include="RestSharp" Version="112.1.0" />
   </ItemGroup>
 
   <ItemGroup>
