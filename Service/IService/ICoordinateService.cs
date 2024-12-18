@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Trace.Models;
+using Trace.Dto;
 
-namespace Trace.Service
+namespace Trace.Service.IService
 {
-    public interface ITruckService : IBaseService<TruckDto>
+    public interface ICoordinateService:IBaseService<CoordinateDto>
     {
-      
+        
     }
 }

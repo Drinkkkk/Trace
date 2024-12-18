@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Trace.Service
+namespace Trace.Service.HttpClient
 {
     public class BaseRequest
     {

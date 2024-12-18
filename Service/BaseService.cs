@@ -1,5 +1,7 @@
 ﻿using RestSharp;
-using Trace.Service;
+using Trace.PageListHelper;
+using Trace.Service.HttpClient;
+using Trace.Service.IService;
 
 namespace Trace.Service
 {
@@ -7,14 +9,15 @@ namespace Trace.Service
     {
         private HttpRestClient client;
         private string servicename;
-        public BaseService(HttpRestClient client, string Servicename) {
-        this.client = client;
-        this.servicename = Servicename;
+        public BaseService(HttpRestClient client, string Servicename)
+        {
+            this.client = client;
+            servicename = Servicename;
         }
 
         public async Task<ApiResponse<T>> AddAsync(T entity)
         {
-           BaseRequest request = new BaseRequest();
+            BaseRequest request = new BaseRequest();
             request.Method = Method.Post;
             request.Route = $"api/{servicename}/Add";
             request.Parameter = entity;
@@ -26,16 +29,16 @@ namespace Trace.Service
             BaseRequest request = new BaseRequest();
             request.Method = Method.Delete;
             request.Route = $"api/{servicename}/Delete?id={id}";
-         
+
             return await client.ExecuteAsync(request);
         }
 
-      
+
 
         public async Task<ApiResponse<T>> GetFirstorDefaultAsync(int id)
         {
             BaseRequest request = new BaseRequest();
-            request.Method = Method.Post;
+            request.Method = Method.Get;
             request.Route = $"api/{servicename}/Get?id={id}";
 
             return await client.ExecuteAsync<T>(request);
@@ -47,21 +50,24 @@ namespace Trace.Service
             request.Method = Method.Post;
             request.Route = $"api/{servicename}/Update";
             request.Parameter = entity;
-          
+
             return await client.ExecuteAsync<T>(request);
         }
 
-      /*  public async Task<ApiResponse<PagedList<T>>> GetAllAsync(QueryPara Parameter)
-         {
-             BaseRequest request = new BaseRequest();
-             request.Method = Method.Post;
-            request.Route = $"api/{servicename}/GetAll?Pageindex={Parameter.Pageindex}" +
-                $"&PageSize={Parameter.PageSize}"
-           // request.Route= "http://localhost:32169/api/ToDo/GetAll?Pageindex=0&PageSize=5"
-                 +$"&search={Parameter.Search}";
-             return await client.ExecuteAsync<PagedList<T>>(request);
-         }*/
-
        
+        public async Task<ApiResponse<PagedList<T>>> GetPageListAsync(HttpClient.QueryParameter queryParameter)
+        {
+            BaseRequest request = new BaseRequest();
+            request.Method = Method.Post;
+            /* request.Route = $"api/{servicename}/GetAll?pageIndex={queryParameter.PageIndex}" +
+                 $"&pageSize={queryParameter.PageSize}" + $"&search={queryParameter.Search}";*/
+
+
+            request.Route = $"api/{servicename}/GetAll";
+
+            request.Parameter = queryParameter;
+            
+            return await client.ExecuteAsync<PagedList<T>>(request);
+        }
     }
 }

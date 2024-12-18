@@ -4,7 +4,7 @@ using Trace.Common.Models;
 
 namespace Trace.ViewModels
 {
-    public class MainViewModel : BindableBase
+    public class MainViewModel : NavigationViewModel, IConfigureService
     {
         private string userName;
 
@@ -17,7 +17,7 @@ namespace Trace.ViewModels
         public DelegateCommand LoginOutCommand { get; private set; }
 
         public MainViewModel(IContainerProvider containerProvider,
-            IRegionManager regionManager)
+            IRegionManager regionManager):base(containerProvider)
         { 
             MenuBars = new ObservableCollection<MenuBar>();
             NavigateCommand = new DelegateCommand<MenuBar>(Navigate);
@@ -38,7 +38,7 @@ namespace Trace.ViewModels
               });
             this.containerProvider = containerProvider;
             this.regionManager = regionManager;
-            CreateMenuBar();
+          
         }
 
         private void Navigate(MenuBar obj)
