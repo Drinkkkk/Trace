@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Trace.ViewModels
+namespace Trace.ViewModels.DialogViewModels
 {
-    public class SettingViewModel:BindableBase
+    public class UserEditViewModel
     {
-
     }
 }
