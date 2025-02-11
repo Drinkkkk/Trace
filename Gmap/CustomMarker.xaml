@@ -1,0 +1,17 @@
+﻿<UserControl
+    x:Class="Trace.Gmap.CustomMarker"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Trace.Gmap"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Width="30"
+    Height="40"
+    Opacity="10"
+    mc:Ignorable="d">
+    <Image
+        Name="icon"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center"
+        Source="Images/redpin.png" />
+</UserControl>

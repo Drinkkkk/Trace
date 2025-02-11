@@ -13,18 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Trace.Views
+namespace Trace.Views.DialogViews
 {
     /// <summary>
-    /// SettingView.xaml 的交互逻辑
+    /// AddTripView.xaml 的交互逻辑
     /// </summary>
-    public partial class SettingView : UserControl
+    public partial class AddTripView : UserControl
     {
-        public SettingView()
+        public AddTripView()
         {
             InitializeComponent();
         }
-
-     
     }
 }

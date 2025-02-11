@@ -7,29 +7,40 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <Platforms>AnyCPU;x64</Platforms>
+    <ApplicationIcon>cxmeq-0fknl-001.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Images\cat.jpg" />
     <None Remove="Images\login.png" />
+    <None Remove="Images\redpin.png" />
     <None Remove="Images\wind.png" />
+    <None Remove="Images\个人中心.png" />
     <None Remove="Views\user.jpg" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="GMap.NET.Core" Version="2.1.7" />
-    <PackageReference Include="GMap.NET.WinPresentation" Version="2.1.7" />
+    <Content Include="cxmeq-0fknl-001.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="GMap.NET.Presentation" Version="1.7.5" />
     <PackageReference Include="HandyControl" Version="3.5.1" />
     <PackageReference Include="MaterialDesignThemes" Version="5.1.1-ci795" />
+    <PackageReference Include="MQTTnet.Extensions.ManagedClient" Version="4.3.7.1207" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Prism.DryIoc" Version="9.0.537" />
     <PackageReference Include="RestSharp" Version="112.1.0" />
+    <PackageReference Include="System.Data.SQLite" Version="1.0.119" />
+    <PackageReference Include="System.Runtime.Extensions" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="Images\cat.jpg" />
     <Resource Include="Images\login.png" />
+    <Resource Include="Images\redpin.png" />
     <Resource Include="Images\wind.png" />
+    <Resource Include="Images\个人中心.png" />
   </ItemGroup>
 
   <ItemGroup>

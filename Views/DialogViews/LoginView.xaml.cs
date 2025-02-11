@@ -12,19 +12,26 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Trace.Common.Extensions;
 
 namespace Trace.Views
 {
     /// <summary>
-    /// SettingView.xaml 的交互逻辑
+    /// LoginView.xaml 的交互逻辑
     /// </summary>
-    public partial class SettingView : UserControl
+    public partial class LoginView : UserControl
     {
-        public SettingView()
+        private readonly IEventAggregator aggregator;
+
+        public LoginView(IEventAggregator aggregator)
         {
             InitializeComponent();
+            this.aggregator = aggregator;
+            this.aggregator.RegisterMessage(arg =>
+            {
+                LoginSnakeBar.MessageQueue.Enqueue(arg.Message);
+            }, "Login");
+            
         }
-
-     
     }
 }

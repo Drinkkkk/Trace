@@ -10,7 +10,7 @@ namespace Trace.ViewModels
     public class NavigationViewModel :BindableBase, INavigationAware
     {
         private readonly IContainerProvider container;
-        private readonly IEventAggregator Aggregator;
+        public readonly IEventAggregator Aggregator;
 
         public NavigationViewModel(IContainerProvider container)
         {
@@ -38,5 +38,6 @@ namespace Trace.ViewModels
         {
             Aggregator.UpdataLoding(new Common.Events.UpdataModel { IsOpen = isopen });
         }
+
     }
 }

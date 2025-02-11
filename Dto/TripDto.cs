@@ -13,6 +13,15 @@ namespace Trace.Dto
         private DateTime? tripEndTime;
         private string? tripStatus;
 
+
+        private List<CoordinateDto>? coordinates;
+
+        public List<CoordinateDto>? Coordinates
+        {
+            get { return coordinates; }
+            set { coordinates = value; OnPropertyChanged(); }
+        }
+
         public int TripID
         {
             get { return tripID; }

@@ -103,10 +103,13 @@
                     <Button
                         Width="30"
                         Height="30"
-                        HorizontalAlignment="Right"
-                        Content="+"
+                        HorizontalAlignment="Right"    
+                          Command="{Binding ExcuteCommand}"
+                        CommandParameter="增加任务"
                         DockPanel.Dock="Top"
-                        Style="{StaticResource MaterialDesignFloatingActionButton}" />
+                        Style="{StaticResource MaterialDesignFloatingActionButton}" >
+                        <materialdesign:PackIcon Kind="Add" />
+                    </Button>
                 </DockPanel>
                 <ListBox
                     HorizontalContentAlignment="Stretch"
@@ -118,7 +121,7 @@
                             <DockPanel MaxHeight="80" LastChildFill="False">
                                 <ToggleButton DockPanel.Dock="Right" />
                                 <StackPanel>
-                                    <TextBlock Text="{Binding Id}" />
+                                    <TextBlock Text="{Binding TripID}" />
                                 </StackPanel>
                             </DockPanel>
 

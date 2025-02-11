@@ -11,6 +11,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Trace.Common;
 using Trace.Common.Extensions;
+using Trace.ViewModels;
 using Trace.Views;
 
 namespace Trace
@@ -32,7 +33,7 @@ namespace Trace
                 DialogHost.IsOpen = x.IsOpen;
                 if (DialogHost.IsOpen)
                 {
-                    DialogHost.DialogContent = loadingView;
+                    DialogHost.DialogContent = this.loadingView;
                 }
             });
             btnMin.Click += (s, e) => { this.WindowState = WindowState.Minimized; };
@@ -47,7 +48,11 @@ namespace Trace
             {
                  var dialogResult = await Service.Question("温馨提示", "确认退出系统?");
                  if (dialogResult.Result != ButtonResult.OK) return;
-                this.Close();
+
+              
+                Application.Current.Shutdown();
+
+
             };
             ColorZone.MouseMove += (s, e) =>
             {

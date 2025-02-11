@@ -1,6 +1,8 @@
 ﻿using System.Configuration;
 using System.Data;
 using System.Windows;
+using MQTTnet.Client;
+using MQTTnet.Extensions.ManagedClient;
 using Prism.DryIoc;
 using Prism.Ioc;
 using Trace.Common;
@@ -25,12 +27,24 @@ namespace Trace
 
         protected override void OnInitialized()
         {
-            var service = App.Current.MainWindow.DataContext as IConfigureService;
-            if (service != null)
+            var dialog = Container.Resolve<IDialogService>();
+            dialog.ShowDialog("LoginView", callback =>
             {
-                service.Configure();
-            }
-            base.OnInitialized();
+                if(callback.Result!=ButtonResult.OK)
+                {
+                    Application.Current.Shutdown();
+                    return;
+                }
+
+                var service = App.Current.MainWindow.DataContext as IConfigureService;
+                if (service != null)
+                {
+                    service.Configure();
+                }
+                base.OnInitialized();
+            });
+
+          
         }
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
@@ -51,15 +65,20 @@ namespace Trace
             containerRegistry.RegisterForNavigation<MissionView, MissionViewModel>();
             containerRegistry.RegisterForNavigation<SettingView, SettingViewModel>();
             containerRegistry.RegisterForNavigation<UserView, UserViewModel>();
-
+            containerRegistry.RegisterForNavigation<test, UserViewModel>();
 
 
             //单例  
             containerRegistry.RegisterSingleton<LoadingView>();
+
             //自定义弹窗服务
             containerRegistry.Register<IDialogHostService, DialogHostService>();
-            containerRegistry.RegisterForNavigation<AddTruckView,AddTruckViewModel>();
+            containerRegistry.RegisterForNavigation<AddTruckView, AddTruckViewModel>();
             containerRegistry.RegisterForNavigation<MsgView, MsgViewModel>();
+
+
+            //官方弹窗
+            containerRegistry.RegisterDialog<LoginView, LoginViewModel>();
         }
     }
 

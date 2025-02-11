@@ -1,14 +1,238 @@
-﻿<UserControl x:Class="Trace.Views.MissionView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Trace.Views"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"
-             xmlns:src="clr-namespace:Trace.Gmap"
-             >
-    <Grid>
-        <src:MapControl Grid.Row="0" x:Name="MainMap" Zoom="13" MaxZoom="24" MinZoom="1"/>
-    </Grid>
+﻿<UserControl
+    x:Class="Trace.Views.MissionView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cv="clr-namespace:Trace.Common.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:local="clr-namespace:Trace.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:src="clr-namespace:Trace.Gmap"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <cv:StringToIntConverter x:Key="StringToInt" />
+    </UserControl.Resources>
+    <md:DialogHost>
+        <md:DrawerHost IsRightDrawerOpen="{Binding IsRightOpen}">
+            <md:DrawerHost.RightDrawerContent>
+                <DockPanel Width="300" LastChildFill="False">
+                    <TextBlock
+                        Padding="20,10"
+                        DockPanel.Dock="Top"
+                        FontSize="20"
+                        FontWeight="Bold"
+                        Text="添加任务" />
+
+                    <StackPanel
+                        Margin="20"
+                        DockPanel.Dock="Top"
+                        Orientation="Horizontal">
+                        <TextBlock VerticalAlignment="Center" Text="状态 : " />
+                        <ComboBox
+                            Width="70"
+                            HorizontalContentAlignment="Center"
+                            SelectedIndex="{Binding CurrentDto.TripStatus, Converter={StaticResource StringToInt}}">
+                            <ComboBoxItem>未完成</ComboBoxItem>
+                            <ComboBoxItem>已完成</ComboBoxItem>
+                        </ComboBox>
+                    </StackPanel>
+                    <TextBox
+                        Margin="20,10"
+                        md:HintAssist.Hint="请输入车辆ID"
+                        DockPanel.Dock="Top"
+                        Text="{Binding CurrentDto.TruckID}" />
+                    <TextBox
+                        Margin="20,10"
+                        md:HintAssist.Hint="请输入任务标题"
+                        DockPanel.Dock="Top"
+                        Text="{Binding CurrentDto.Title}" />
+                    <TextBox
+                        Margin="20,10"
+                        md:HintAssist.Hint="请输入任务内容"
+                        DockPanel.Dock="Top"
+                        Text="{Binding CurrentDto.Content}" />
+                    <TextBox
+                        Margin="20,10"
+                        md:HintAssist.Hint="请输入预计开始时间"
+                        DockPanel.Dock="Top"
+                        Text="{Binding CurrentDto.ExpectedStartTime}" />
+                    <TextBox
+                        Margin="20,10"
+                        md:HintAssist.Hint="请输入预计结束时间"
+                        DockPanel.Dock="Top"
+                        Text="{Binding CurrentDto.ExpectedEndTime}" />
+
+                    <Button
+                        Margin="20,0"
+                        Command="{Binding Excute}"
+                        CommandParameter="保存"
+                        Content="添加/更新任务"
+                        DockPanel.Dock="Top" />
+                </DockPanel>
+            </md:DrawerHost.RightDrawerContent>
+            <Grid>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="10*" />
+                </Grid.RowDefinitions>
+
+
+
+                <DockPanel LastChildFill="False">
+                    <TextBox
+                        Width="150"
+                        Margin="10"
+                        md:HintAssist.Hint="查找任务..."
+                        md:TextFieldAssist.HasClearButton="True"
+                        FontSize="15"
+                        Text="{Binding Search, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                        <TextBox.InputBindings>
+                            <KeyBinding
+                                Key="Enter"
+                                Command="{Binding Excute}"
+                                CommandParameter="查询" />
+                        </TextBox.InputBindings>
+                    </TextBox>
+
+
+                    <TextBlock
+                        Margin="0,0,10,0"
+                        VerticalAlignment="Center"
+                        FontSize="15"
+                        Text="筛选:" />
+                    <ComboBox
+                        Width="80"
+                        FontSize="15"
+                        SelectedIndex="{Binding IndexSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <ComboBoxItem Content="全部" />
+                        <ComboBoxItem Content="未完成" />
+                        <ComboBoxItem Content="已完成" />
+                    </ComboBox>
+                    <Button
+                        Name="addbt"
+                        Margin="10"
+                        Command="{Binding Excute}"
+                        CommandParameter="新增"
+                        Content="+添加任务"
+                        DockPanel.Dock="Right" />
+                </DockPanel>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="14*" />
+                        <ColumnDefinition Width="3*" />
+                    </Grid.ColumnDefinitions>
+                    <ScrollViewer
+                        Grid.Column="1"
+                        Margin="0,3,0,10"
+                        ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                        <ItemsControl HorizontalAlignment="Center" ItemsSource="{Binding Trips, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <md:TransitioningContent OpeningEffect="{md:TransitionEffect Kind=ExpandIn}">
+                                        <Grid
+                                            Width="200"
+                                            Height="200"
+                                            Margin="10">
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="MouseLeftButtonUp">
+                                                    <i:InvokeCommandAction Command="{Binding DataContext.SelectedCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}}" CommandParameter="{Binding}" />
+                                                </i:EventTrigger>
+                                                <i:EventTrigger EventName="MouseRightButtonUp">
+                                                    <i:InvokeCommandAction Command="{Binding DataContext.ShowMarkerCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}}" CommandParameter="{Binding}" />
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="auto" />
+                                                <RowDefinition />
+                                            </Grid.RowDefinitions>
+                                            <TextBlock
+                                                Padding="10,5"
+                                                Panel.ZIndex="1"
+                                                Text="{Binding Title}" />
+                                            <StackPanel
+                                                Grid.Row="1"
+                                                Panel.ZIndex="1"
+                                                Orientation="Vertical">
+                                                <TextBlock Padding="10,5" Text="{Binding TruckID}" />
+                                                <TextBlock Padding="10,5" Text="{Binding Content}" />
+                                                <TextBlock Padding="10,5" Text="{Binding ExpectedStartTime}" />
+                                                <TextBlock Padding="10,5" Text="{Binding ExpectedEndTime}" />
+                                                <TextBlock Padding="10,5" Text="{Binding TripStartTime}" />
+                                                <TextBlock Padding="10,5" Text="{Binding TripEndTime}" />
+                                            </StackPanel>
+
+
+                                            <Border
+                                                Grid.RowSpan="2"
+                                                Background="Pink"
+                                                CornerRadius="5">
+                                                <Border.Style>
+                                                    <Style TargetType="Border">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding TripStatus}" Value="false">
+                                                                <Setter Property="Background" Value="#CD5B49" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding TripStatus}" Value="true">
+                                                                <Setter Property="Background" Value="Aquamarine" />
+                                                            </DataTrigger>
+
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Border.Style>
+                                            </Border>
+                                            <md:PopupBox HorizontalAlignment="Right" Panel.ZIndex="1">
+                                                <Button
+                                                    Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}}"
+                                                    CommandParameter="{Binding}"
+                                                    Content="删除" />
+                                            </md:PopupBox>
+
+                                            <Canvas Grid.RowSpan="2" ClipToBounds="True">
+                                                <Border
+                                                    Canvas.Top="10"
+                                                    Canvas.Right="-50"
+                                                    Width="120"
+                                                    Height="120"
+                                                    Background="#FFFFFF"
+                                                    CornerRadius="100"
+                                                    Opacity="0.1" />
+                                                <Border
+                                                    Canvas.Top="50"
+                                                    Canvas.Right="-30"
+                                                    Width="120"
+                                                    Height="120"
+                                                    Background="#FFFFFF"
+                                                    CornerRadius="100"
+                                                    Opacity="0.1" />
+                                            </Canvas>
+                                        </Grid>
+                                    </md:TransitioningContent>
+
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+
+                    <src:MapControl
+                        x:Name="MainMap"
+                        Grid.Row="0"
+                        MaxZoom="24"
+                        MinZoom="1"
+                        Zoom="13" />
+
+                </Grid>
+
+
+            </Grid>
+        </md:DrawerHost>
+    </md:DialogHost>
+
 </UserControl>

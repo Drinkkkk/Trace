@@ -16,5 +16,6 @@
             </ResourceDictionary.MergedDictionaries>
 
         </ResourceDictionary>
+       
     </Application.Resources>
 </prism:PrismApplication>

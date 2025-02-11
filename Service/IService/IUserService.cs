@@ -12,8 +12,8 @@ namespace Trace.Service.IService
 {
     public interface IUserService:IBaseService<UserDto>
     {
-        Task<ApiResponse<PagedList<TruckDto>>> GetFliterAsync(FilterQuery query);
-       
-
+        Task<ApiResponse<PagedList<UserDto>>> GetFliterAsync(FilterQuery query);
+        Task<ApiResponse<UserDto>> LoginAsync(UserDto userDto);
+        Task<ApiResponse<UserDto>> RegisterAsync(UserDto userDto);
     }
 }

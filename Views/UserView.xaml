@@ -7,6 +7,7 @@
     xmlns:hc="https://handyorg.github.io/handycontrol"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:local="clr-namespace:Trace.Views"
+    xmlns:m="clr-namespace:Trace.Models"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
     d:DesignHeight="450"
@@ -21,6 +22,7 @@
 
             </ResourceDictionary.MergedDictionaries>
             <cv:PageIndexConverter x:Key="PageIndex" />
+            <cv:EnumToBooleanConverter x:Key="EnumToBoolean" />
         </ResourceDictionary>
 
     </UserControl.Resources>
@@ -48,8 +50,8 @@
                 <TextBox.InputBindings>
                     <KeyBinding
                         Key="Return"
-                        Command="{Binding QueryCommand}"
-                        CommandParameter="{Binding ElementName=inputbox, Path=Text}" />
+                        Command="{Binding ReturnCommand}"
+                        />
                 </TextBox.InputBindings>
 
             </TextBox>
@@ -61,18 +63,35 @@
             <StackPanel Orientation="Horizontal">
                 <RadioButton
                     Background="Black"
-                    Content="男"
+                    Content="全部"
                     FontSize="14"
                     Foreground="Black"
-                    GroupName="gender"
-                    IsChecked="True"
+                    GroupName="role"
+                    IsChecked="{Binding SelectedRole, Converter={StaticResource EnumToBoolean}, ConverterParameter={x:Static m:Role.All}, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                     Style="{StaticResource MaterialDesignChoiceChipPrimaryRadioButton}" />
                 <RadioButton
                     Background="Black"
-                    Content="女"
+                    Content="管理员"
                     FontSize="14"
                     Foreground="Black"
-                    GroupName="gender"
+                    GroupName="role"
+                    IsChecked="{Binding SelectedRole, Converter={StaticResource EnumToBoolean}, ConverterParameter={x:Static m:Role.Administrator}, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                    Style="{StaticResource MaterialDesignChoiceChipPrimaryRadioButton}" />
+                <RadioButton
+                    Background="Black"
+                    Content="工程师"
+                    FontSize="14"
+                    Foreground="Black"
+                    GroupName="role"
+                    IsChecked="{Binding SelectedRole, Converter={StaticResource EnumToBoolean}, ConverterParameter={x:Static m:Role.Engineer}, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                    Style="{StaticResource MaterialDesignChoiceChipPrimaryRadioButton}" />
+                <RadioButton
+                    Background="Black"
+                    Content="工人"
+                    FontSize="14"
+                    Foreground="Black"
+                    GroupName="role"
+                    IsChecked="{Binding SelectedRole, Converter={StaticResource EnumToBoolean}, ConverterParameter={x:Static m:Role.Worker}, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                     Style="{StaticResource MaterialDesignChoiceChipPrimaryRadioButton}" />
             </StackPanel>
 
@@ -82,17 +101,18 @@
                 Margin="20"
                 Content="查询"
                 FontSize="14"
-                Style="{StaticResource MaterialDesignRaisedLightButton}" />
+                Style="{StaticResource MaterialDesignRaisedLightButton}" 
+                Command="{Binding ReturnCommand}"
+                />
             <Button
                 Margin="20"
                 Background="#78b8f2"
                 BorderBrush="#78b8f2"
-                Content="刷新用户列表"
+                Content="添加新用户"
                 DockPanel.Dock="Right"
                 FontSize="14"
                 Style="{StaticResource MaterialDesignRaisedLightButton}" />
         </DockPanel>
-        <!--    -->
         <DataGrid
             Grid.Row="1"
             Margin="20"
@@ -100,21 +120,31 @@
             AutoGenerateColumns="False"
             CanUserAddRows="False"
             CanUserResizeRows="False"
+            Foreground="Black"
+            GridLinesVisibility="Horizontal"
             HeadersVisibility="All"
+           
             ItemsSource="{Binding UserList}"
             RowHeaderWidth="60"
             RowHeight="40"
-            ScrollViewer.VerticalScrollBarVisibility="Hidden">
-            <DataGrid.Resources>
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign2.Defaults.xaml" />
-            </DataGrid.Resources>
+            ScrollViewer.VerticalScrollBarVisibility="Hidden"
+            Style="{StaticResource aa}">
+
+
+
             <DataGrid.RowHeaderTemplate>
                 <DataTemplate>
-                    <CheckBox Margin="10" IsChecked="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=DataGridRow}}" />
+                    <CheckBox
+                        Margin="10"
+                        Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=DataGridRow}}"
+                        IsChecked="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGridRow}}" />
+
                 </DataTemplate>
             </DataGrid.RowHeaderTemplate>
+
             <DataGrid.Columns>
                 <!--  UserID Column  -->
+
                 <DataGridTextColumn
                     Width="*"
                     Binding="{Binding UserID}"
@@ -123,7 +153,7 @@
 
                 <!--  Avatar Column  -->
                 <DataGridTemplateColumn
-                    Width="60"
+                  
                     CanUserResize="False"
                     Header="头像">
 
@@ -153,26 +183,7 @@
                     CanUserSort="False"
                     Header="姓名" />
 
-                <DataGridTemplateColumn Header="Template Column">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBlock
-                                FontSize="14"
-                                FontStyle="Italic"
-                                Text="{Binding FullName}" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                    <DataGridTemplateColumn.CellEditingTemplate>
-                        <DataTemplate>
-                            <TextBox
-                                md:TextFieldAssist.UnderlineBrush="Red"
-                                Foreground="Red"
-                                SelectionBrush="Black"
-                                Text="{Binding FullName}" />
 
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellEditingTemplate>
-                </DataGridTemplateColumn>
                 <!--  Phone Column  -->
                 <DataGridTextColumn
                     Width="*"
@@ -187,7 +198,11 @@
                     Header="权限" />
 
             </DataGrid.Columns>
+
         </DataGrid>
+
+
+
         <Viewbox Grid.Row="2" Height="100">
             <StackPanel
                 Margin="20,10,20,50"

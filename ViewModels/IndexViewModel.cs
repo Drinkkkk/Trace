@@ -18,7 +18,7 @@ namespace Trace.ViewModels
     public class IndexViewModel : NavigationViewModel
     {
 
-        public IndexViewModel(IDialogHostService dialog, ITruckService service, IContainerProvider provider) : base(provider)
+        public IndexViewModel(IDialogHostService dialog, ITruckService service, IContainerProvider provider, ITripService tripService) : base(provider)
         {
             create();
             ExcuteCommand = new DelegateCommand<string>(excute);
@@ -29,6 +29,7 @@ namespace Trace.ViewModels
             this.dialog = dialog;
             this.service = service;
             this.provider = provider;
+            this.tripService = tripService;
             manager = this.provider.Resolve<IRegionManager>();
         }
 
@@ -64,13 +65,49 @@ namespace Trace.ViewModels
             switch (obj)
             {
                 case "增加货车": AddTruck(null); break;
-                case "增加任务": AddTrip(); break;
+                case "增加任务": AddTrip(null); break;
             }
         }
 
-        private void AddTrip()
+        private async void AddTrip(TripDto tripDto)
         {
-            throw new NotImplementedException();
+            var param = new DialogParameters();
+            if (tripDto != null)
+            {
+                var editdot = await tripService.GetFirstorDefaultAsync(tripDto.TripID);
+                if (editdot.Status)
+                {
+                    if (editdot.Result != null)
+                        param.Add("Value", editdot.Result);
+                }
+            }
+            var result = await dialog.ShowDialog("AddTripView", param);
+            if (result.Result == ButtonResult.OK)
+            {
+                var trip = result.Parameters.GetValue<TripDto>("Value");
+                if (trip.TripID > 0)
+                {
+                    var result3 = await tripService.UpdateAsync(trip);
+                    if (result3.Status)
+                    {
+                        var tripmodel = summary.TripList.FirstOrDefault(x => x.TripID.Equals(result3.Result.TripID));
+                        if (tripmodel != null)
+                        {
+
+                        }
+                    }
+                }
+                else
+                {
+                    var result2 = await tripService.AddAsync(trip);
+                    if (result2.Status)
+                    {
+                        Summary.TripList.Add(result2.Result);
+                      
+                        Refresh();
+                    }
+                }
+            }
         }
 
         private async void AddTruck(TruckDto truckDto)
@@ -154,6 +191,7 @@ namespace Trace.ViewModels
         private readonly IDialogHostService dialog;
         private readonly ITruckService service;
         private readonly IContainerProvider provider;
+        private readonly ITripService tripService;
         private readonly IRegionManager manager;
         private DelegateCommand<string> excutecommand;
         public DelegateCommand<string> ExcuteCommand

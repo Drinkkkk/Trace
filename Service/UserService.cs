@@ -20,7 +20,7 @@ namespace Trace.Service
             this.client = client;
         }
 
-        public async Task<ApiResponse<PagedList<TruckDto>>> GetFliterAsync(FilterQuery query)
+        public async Task<ApiResponse<PagedList<UserDto>>> GetFliterAsync(FilterQuery query)
         {
             BaseRequest request = new BaseRequest();
             request.Method = Method.Post;
@@ -28,12 +28,39 @@ namespace Trace.Service
                  $"&pageSize={queryParameter.PageSize}" + $"&search={queryParameter.Search}";*/
 
 
-            request.Route = $"api/Truck/GetFilter";
+            request.Route = $"api/User/GetFilter";
 
             request.Parameter = query;
 
-            return await client.ExecuteAsync<PagedList<TruckDto>>(request);
+            return await client.ExecuteAsync<PagedList<UserDto>>(request);
         }
 
+        public async Task<ApiResponse<UserDto>> LoginAsync(UserDto userDto)
+        {
+            BaseRequest request = new BaseRequest();
+            request.Method = Method.Post;
+          
+
+
+            request.Route = $"api/User/Login";
+
+            request.Parameter = userDto;
+
+            return await client.ExecuteAsync<UserDto>(request);
+        }
+
+        public async Task<ApiResponse<UserDto>> RegisterAsync(UserDto userDto)
+        {
+            BaseRequest request = new BaseRequest();
+            request.Method = Method.Post;
+
+
+
+            request.Route = $"api/User/Register";
+
+            request.Parameter = userDto;
+
+            return await client.ExecuteAsync<UserDto>(request);
+        }
     }
 }

@@ -8,16 +8,34 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using Trace.Dto;
+using Trace.Models;
 using Trace.Service.HttpClient;
 using Trace.Service.IService;
 using static MaterialDesignThemes.Wpf.Theme.ToolBar;
 
 namespace Trace.ViewModels
 {
+   
     public class UserViewModel : BindableBase
     {
 
         #region 属性
+        private Role role;
+
+        public Role SelectedRole
+        {
+            get { return role; }
+            set { role = value; RaisePropertyChanged(); }
+        }
+
+
+        private List<UserDto> user;
+        public List<UserDto> User
+        {
+            get { return user; }
+            set { user = value; RaisePropertyChanged(); }
+        }
+
         private ICollectionView collectionView;
 
         public ICollectionView CollectionView
@@ -33,17 +51,18 @@ namespace Trace.ViewModels
             set { userlist = value; RaisePropertyChanged(); }
         }
 
-        private DelegateCommand filter;
 
-        public DelegateCommand Filter
+        private DelegateCommand returncommand;
+
+        public DelegateCommand ReturnCommand
         {
-            get { return filter; }
-            set { filter = value; RaisePropertyChanged(); }
+            get { return returncommand; }
+            set { returncommand = value; RaisePropertyChanged(); }
         }
 
-        private DelegateCommand<QueryParameter> querycommand;
+        private DelegateCommand<FilterQuery> querycommand;
 
-        public DelegateCommand<QueryParameter> QueryCommand
+        public DelegateCommand<FilterQuery> QueryCommand
         {
             get { return querycommand; }
             set { querycommand = value; RaisePropertyChanged(); }
@@ -74,13 +93,14 @@ namespace Trace.ViewModels
             set { search = value; RaisePropertyChanged(); }
         }
 
-        private QueryParameter parameter;
+        private FilterQuery parameter;
 
-        public QueryParameter Parameter
+        public FilterQuery Parameter
         {
             get { return parameter; }
             set { parameter = value; RaisePropertyChanged(); }
         }
+        
 
         #endregion
         #region page属性
@@ -138,22 +158,21 @@ namespace Trace.ViewModels
 
 
         #endregion
-        private List<UserDto> user;
         private readonly IUserService Service;
-
-        public List<UserDto> User
-        {
-            get { return user; }
-            set { user = value; RaisePropertyChanged(); }
-        }
-
         public UserViewModel(IUserService userService)
         {
             UserList = new ObservableCollection<UserDto>();
-            QueryCommand = new DelegateCommand<QueryParameter>(Query);
+            QueryCommand = new DelegateCommand<FilterQuery>(Query);
+            ReturnCommand = new DelegateCommand(ReturnKey);
             JumpCommand = new DelegateCommand<HandyControl.Data.FunctionEventArgs<int>>(Jump);
-            Parameter=new QueryParameter() { pageIndex=0,pageSize=10,search="" };
+            Parameter=new FilterQuery() { pageIndex=0,pageSize=10,search="",Filter="" };
             this.Service = userService;
+            Query(Parameter);
+        }
+
+        private void ReturnKey()
+        {
+           
             Query(Parameter);
         }
 
@@ -169,9 +188,11 @@ namespace Trace.ViewModels
         }
 
    
-        private async void Query(QueryParameter parameter)
+        private async void Query(FilterQuery parameter)
         {
-            var result = await Service.GetPageListAsync(parameter);
+            Parameter.search =Search;
+            Parameter.Filter = SelectedRole.ToString();
+            var result = await Service.GetFliterAsync(parameter);
             if (result.Status)
             {
 

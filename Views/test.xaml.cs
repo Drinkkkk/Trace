@@ -16,15 +16,13 @@ using System.Windows.Shapes;
 namespace Trace.Views
 {
     /// <summary>
-    /// SettingView.xaml 的交互逻辑
+    /// test.xaml 的交互逻辑
     /// </summary>
-    public partial class SettingView : UserControl
+    public partial class test : UserControl
     {
-        public SettingView()
+        public test()
         {
             InitializeComponent();
         }
-
-     
     }
 }

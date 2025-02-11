@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GMap.NET.WindowsPresentation;
 
+
 namespace Trace.Gmap
 {
     public class MapControl : GMapControl
@@ -16,10 +17,12 @@ namespace Trace.Gmap
     }
     public abstract class AMapProviderBase : GMapProvider
     {
+        
         public AMapProviderBase()
         {
             MaxZoom = null;
-            RefererUrl = "https://www.amap.com/";
+            RefererUrl = "http://www.amap.com/";
+            //Copyright = string.Format("©{0} 高德 Corporation, ©{0} NAVTEQ, ©{0} Image courtesy of NASA", DateTime.Today.Year);    
         }
 
         public override PureProjection Projection
@@ -28,7 +31,6 @@ namespace Trace.Gmap
         }
 
         GMapProvider[] overlays;
-
         public override GMapProvider[] Overlays
         {
             get
@@ -40,46 +42,55 @@ namespace Trace.Gmap
                 return overlays;
             }
         }
-    }
 
 
-    public class AMapProvider : AMapProviderBase
-    {
-        public static readonly AMapProvider Instance;
-        readonly Guid id = new Guid("EF3DD303-3F74-4938-BF40-232D0595EE88");
-        public override Guid Id
+        public class AMapProvider : AMapProviderBase
         {
-            get { return id; }
-        }
-        readonly string name = "AMap";
-        public override string Name
-        {
-            get
+            public static readonly AMapProvider Instance;
+
+            readonly Guid id = new Guid("EF3DD303-3F74-4938-BF40-232D0595EE88");
+            public override Guid Id
             {
-                return name;
+                get { return id; }
             }
-        }
-        static AMapProvider()
-        {
-            Instance = new AMapProvider();
-        }
 
-        public override PureImage GetTileImage(GPoint pos, int zoom)
-        {
-            string url = MakeTileImageUrl(pos, zoom, LanguageStr);
-            return GetTileImageUsingHttp(url);
+            readonly string name = "AMap";
+            public override string Name
+            {
+                get
+                {
+                    return name;
+                }
+            }
+
+            static AMapProvider()
+            {
+                Instance = new AMapProvider();
+            }
+
+            public override PureImage GetTileImage(GPoint pos, int zoom)
+            {
+                try
+                {
+                    string url = MakeTileImageUrl(pos, zoom, LanguageStr);
+                    return GetTileImageUsingHttp(url);
+                }
+                catch (Exception ex)
+                {
+                    return null;
+                }
+            }
+
+            string MakeTileImageUrl(GPoint pos, int zoom, string language)
+            {
+                var num = (pos.X + pos.Y) % 4 + 1;
+                //string url = string.Format(UrlFormat, num, pos.X, pos.Y, zoom);
+                string url = string.Format(UrlFormat, pos.X, pos.Y, zoom);
+                return url;
+            }
+
+            //static readonly string UrlFormat = "http://webrd04.is.autonavi.com/appmaptile?x={0}&y={1}&z={2}&lang=zh_cn&size=1&scale=1&style=7";
+            static readonly string UrlFormat = "http://webrd01.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=7&x={0}&y={1}&z={2}";
         }
-
-        string MakeTileImageUrl(GPoint pos, int zoom, string language)
-        {
-            //string url = string.Format(UrlFormat, num, pos.X, pos.Y, zoom);
-            string url = string.Format(UrlFormat, pos.X, pos.Y, zoom);
-            Console.WriteLine("url:" + url);
-            return url;
-        }
-
-        //static readonly string UrlFormat = "http://webrd04.is.autonavi.com/appmaptile?x={0}&y={1}&z={2}&lang=zh_cn&size=1&scale=1&style=7";
-        static readonly string UrlFormat = "http://webrd01.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=7&x={0}&y={1}&z={2}";
-    }        
-
+    }
 }

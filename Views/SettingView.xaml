@@ -1,12 +1,185 @@
-﻿<UserControl x:Class="Trace.Views.SettingView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Trace.Views"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
+﻿<UserControl
+    x:Class="Trace.Views.SettingView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Trace.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <Grid ShowGridLines="true">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <TextBlock
+            Grid.Row="0"
+            Margin="6,20,0,0"
+            VerticalAlignment="Center"
+            Background="BlanchedAlmond"
+            FontSize="25"
+            FontWeight="Bold"
+            Foreground="#666"
+            Text="MQTT客户端" />
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="220" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Border BorderBrush="#EEE" BorderThickness="0,0,1,0" />
+
+            <StackPanel Margin="20">
+
+                <Button
+                    Height="30"
+                    Margin="0,30,0,0"
+                    Command="{Binding ConnectionCommand}"
+                    Content="连接"
+                    Style="{StaticResource ButtonStyle}" />
+                <Button
+                    Height="30"
+                    Margin="0,10"
+                    Command="{Binding CloseCommand}"
+                    Content="断开"
+                    Style="{StaticResource ButtonStyle}" />
+            </StackPanel>
+
+            <Grid Grid.Column="1" Margin="20,10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="50" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="auto" />
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.ColumnSpan="3" Background="#F7F9FA" />
+                    <TextBlock
+                        Margin="5,0"
+                        VerticalAlignment="Center"
+                        Text="订阅" />
+                    <TextBlock
+                        Grid.Row="1"
+                        Margin="5,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Text="主题" />
+                    <TextBox
+                        Name="tbTopic"
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Height="30"
+                        Padding="5,0"
+                        VerticalContentAlignment="Center"
+                        Text="{Binding Topic, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <Button
+                        Grid.Row="1"
+                        Grid.Column="2"
+                        Width="50"
+                        Height="30"
+                        Margin="5,10,0,10"
+                        HorizontalAlignment="Left"
+                        Command="{Binding SubscriteCommand}"
+                        Content="订阅"
+                        Style="{StaticResource ButtonStyle}" />
+                </Grid>
+
+                <Grid Grid.Row="1" Margin="0,20">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="50" />
+                        <RowDefinition Height="30" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="auto" />
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.ColumnSpan="3" Background="#F7F9FA" />
+                    <TextBlock
+                        Margin="5,0"
+                        VerticalAlignment="Center"
+                        Text="发布" />
+                    <TextBlock
+                        Grid.Row="1"
+                        Margin="5,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Text="主题" />
+                    <TextBox
+                        Name="tbPubTopic"
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Height="30"
+                        Padding="5,0"
+                        VerticalContentAlignment="Center"
+                        Text="{Binding Topic, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBlock
+                        Grid.Row="2"
+                        Margin="5,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Text="内容" />
+                    <TextBox
+                        Name="tbContent"
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        Height="30"
+                        Padding="5,0"
+                        VerticalContentAlignment="Center"
+                        Text="{Binding Pubmsg, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <Button
+                        Grid.Row="2"
+                        Grid.Column="2"
+                        Width="50"
+                        Height="30"
+                        Margin="5,0,5,0"
+                        VerticalAlignment="Top"
+                        Command="{Binding PublishCommand}"
+                        Content="发布"
+                        Style="{StaticResource ButtonStyle}" />
+                </Grid>
+
+                <Grid Grid.Row="2" Margin="0,10,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Border Grid.ColumnSpan="3" Background="#F7F9FA" />
+                    <TextBlock
+                        Margin="5,0"
+                        VerticalAlignment="Center"
+                        Text="消息" />
+                    <TextBox
+                        x:Name="txtRich"
+                        Grid.Row="1"
+                        Height="200"
+                        Margin="10,9,75,10"
+                        Padding="3,0"
+                        VerticalContentAlignment="Top"
+                        Background="White"
+                        Text="{Binding ConnectWords, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        ToolTip="右键清理内容">
+                        <!--  添加一个右键菜单的功能，即清空  -->
+                        <TextBox.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem x:Name="menuClear" Header="清空内容" />
+                            </ContextMenu>
+                        </TextBox.ContextMenu>
+                    </TextBox>
+                </Grid>
+            </Grid>
+        </Grid>
     </Grid>
 </UserControl>
