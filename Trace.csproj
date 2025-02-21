@@ -29,6 +29,7 @@
     <PackageReference Include="MaterialDesignThemes" Version="5.1.1-ci795" />
     <PackageReference Include="MQTTnet.Extensions.ManagedClient" Version="4.3.7.1207" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="NLog.Extensions.Logging" Version="5.4.0" />
     <PackageReference Include="Prism.DryIoc" Version="9.0.537" />
     <PackageReference Include="RestSharp" Version="112.1.0" />
     <PackageReference Include="System.Data.SQLite" Version="1.0.119" />
@@ -45,6 +46,12 @@
 
   <ItemGroup>
     <Folder Include="新文件夹\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="NLog.Config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

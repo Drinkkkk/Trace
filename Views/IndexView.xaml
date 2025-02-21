@@ -23,7 +23,7 @@
         <TextBlock
             Margin="15,10"
             FontSize="22"
-            Text="你好,今天是-----" />
+            Text="{Binding Title}" />
 
         <ItemsControl Grid.Row="1" ItemsSource="{Binding Taskbars}">
             <ItemsControl.ItemsPanel>
@@ -112,16 +112,64 @@
                     </Button>
                 </DockPanel>
                 <ListBox
+                    x:Name="triplist"
                     HorizontalContentAlignment="Stretch"
                     ItemsSource="{Binding Summary.TripList}"
                     ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseDoubleClick">
+                            <i:InvokeCommandAction Command="{Binding EditTripCommand}" CommandParameter="{Binding ElementName=triplist, Path=SelectedItem}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
                     <ListBox.ItemTemplate>
                         <DataTemplate>
 
-                            <DockPanel MaxHeight="80" LastChildFill="False">
-                                <ToggleButton DockPanel.Dock="Right" />
+                            <DockPanel LastChildFill="False">
+
                                 <StackPanel>
-                                    <TextBlock Text="{Binding TripID}" />
+                                    <DockPanel LastChildFill="False">
+                                        <TextBlock Text="行程 ID:"  Margin="0,0,180,0"/>
+                                        <TextBlock Text="{Binding TripID}" DockPanel.Dock="Right"  />
+                                    </DockPanel>
+
+                                    <!-- 货车 ID -->
+                                    <DockPanel LastChildFill="False">
+                                        <TextBlock Text="货车 ID:" />
+                                        <TextBlock Text="{Binding TruckID}" DockPanel.Dock="Right" />
+                                    </DockPanel>
+
+                                   
+                                    <!-- 行程状态 -->
+                                    <DockPanel LastChildFill="False">
+                                        <TextBlock Text="行程状态:" />
+                                        <TextBlock Text="{Binding TripStatus}" DockPanel.Dock="Right" />
+                                    </DockPanel>
+
+                                    <!-- 预计开始时间 -->
+                                    <DockPanel LastChildFill="False">
+                                        <TextBlock Text="预计开始时间:" />
+                                        <TextBlock Text="{Binding ExpectedStartTime, StringFormat='{}{0:yyyy-MM-dd HH:mm:ss}'}" DockPanel.Dock="Right" />
+                                    </DockPanel>
+
+                                    <!-- 预计结束时间 -->
+                                    <DockPanel LastChildFill="False">
+                                        <TextBlock Text="预计结束时间:" />
+                                        <TextBlock Text="{Binding ExpectedEndTime, StringFormat='{}{0:yyyy-MM-dd HH:mm:ss}'}" DockPanel.Dock="Right" />
+                                    </DockPanel>
+
+                                    <!-- 行程标题 -->
+                                    <DockPanel LastChildFill="False">
+                                        <TextBlock Text="行程标题:" />
+                                        <TextBlock Text="{Binding Title}" DockPanel.Dock="Right" />
+                                    </DockPanel>
+
+                                    <!-- 行程内容描述 -->
+                                    <DockPanel LastChildFill="False">
+                                        <TextBlock Text="行程内容描述:" />
+                                        <TextBlock Text="{Binding Content}" DockPanel.Dock="Right" />
+                                    </DockPanel>
+
+                                
                                 </StackPanel>
                             </DockPanel>
 
@@ -166,7 +214,7 @@
                     </i:Interaction.Triggers>
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <DockPanel MaxHeight="80" LastChildFill="False">
+                            <DockPanel  LastChildFill="False">
                                 <ToggleButton
                                     Command="{Binding DataContext.CompeleteCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBox}}"
                                     CommandParameter="{Binding}"
@@ -175,9 +223,40 @@
 
 
                                 <StackPanel>
-                                    <TextBlock Text="{Binding TruckID}" />
-                                    <TextBlock Text="{Binding Title}" />
-                                    <TextBlock Text="{Binding Content}" />
+                                    <DockPanel LastChildFill="False">
+                                        <TextBlock Text="卡车ID:" Margin="0,0,20,0"/>
+                                        <TextBlock Text="{Binding TruckID}" DockPanel.Dock="Right" />
+                                    </DockPanel>
+
+                                    <!-- 标题 -->
+                                    <DockPanel LastChildFill="False">
+                                        <TextBlock Text="标题:" />
+                                        <TextBlock Text="{Binding Title}" DockPanel.Dock="Right" />
+                                    </DockPanel>
+
+                                    <!-- 内容 -->
+                                    <DockPanel LastChildFill="False">
+                                        <TextBlock Text="内容:" />
+                                        <TextBlock Text="{Binding Content}" DockPanel.Dock="Right" />
+                                    </DockPanel>
+
+                                    <!-- 车牌 -->
+                                    <DockPanel LastChildFill="False">
+                                        <TextBlock Text="车牌:" />
+                                        <TextBlock Text="{Binding LicensePlate}" DockPanel.Dock="Right" />
+                                    </DockPanel>
+
+                                    <!-- 车型 -->
+                                    <DockPanel LastChildFill="False">
+                                        <TextBlock Text="车型:" />
+                                        <TextBlock Text="{Binding VehicleModel}" DockPanel.Dock="Right" />
+                                    </DockPanel>
+
+                                    <!-- 载重能力 -->
+                                    <DockPanel LastChildFill="False">
+                                        <TextBlock Text="载重能力:" />
+                                        <TextBlock Text="{Binding LoadCapacity}" DockPanel.Dock="Right" />
+                                    </DockPanel>
 
                                 </StackPanel>
                             </DockPanel>

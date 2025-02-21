@@ -34,7 +34,7 @@ namespace Trace.ViewModels
             LoginOutCommand = new DelegateCommand(() =>
               {
                   //注销当前用户
-                //  App.LoginOut(containerProvider);
+                  App.LoginOut(containerProvider);
               });
             this.containerProvider = containerProvider;
             this.regionManager = regionManager;
@@ -57,6 +57,7 @@ namespace Trace.ViewModels
         public DelegateCommand GoBackCommand { get; private set; }
         public DelegateCommand GoForwardCommand { get; private set; }
 
+       
         private ObservableCollection<MenuBar> menuBars;
         private readonly IContainerProvider containerProvider;
         private readonly IRegionManager regionManager;

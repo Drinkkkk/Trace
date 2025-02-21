@@ -10,95 +10,121 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Width="800"
     Height="450"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+    >
     <UserControl.Resources>
         <cv:IntToRoleConvert x:Key="IntToRole" />
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
+            <RowDefinition />
             <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-
         </Grid.RowDefinitions>
 
         <TextBlock
-            Margin="20"
+            Padding="20,10"
             FontSize="20"
-            Text="用户详情" />
-        <Border Grid.Row="1" BorderThickness="0,1,0,0" />
-        <StackPanel Grid.Row="2" Orientation="Vertical">
-            <StackPanel Margin="30,10" Orientation="Horizontal">
-                <Image
-                    Name="image1"
-                    Width="50"
-                    Height="50"
-                    Margin="10,0,30,0"
-                    Source="{Binding CurrentImageSource, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                    <Image.Clip>
-                        <EllipseGeometry
-                            Center="25,25"
-                            RadiusX="25"
-                            RadiusY="25" />
-                    </Image.Clip>
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="MouseLeftButtonUp">
-                            <i:InvokeCommandAction Command="{Binding DataContext.OpenFileCommand}" />
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </Image>
-                <TextBlock
-                    VerticalAlignment="Center"
-                    FontSize="20"
-                    Text="account" />
-            </StackPanel>
-        </StackPanel>
-        <Border Grid.Row="3" BorderThickness="0,1,0,0" />
+            FontWeight="Bold"
+            Text="修改用户信息" />
 
-        <StackPanel Grid.Row="5" Orientation="Vertical">
+        <DockPanel Grid.Row="1" LastChildFill="False">
 
-            <StackPanel Margin="30,5" Orientation="Horizontal">
+            <!-- 用户 ID 输入（通常修改时可能只读） -->
+            <StackPanel
+                Margin="20,10"
+                DockPanel.Dock="Top"
+                Orientation="Horizontal">
+                <TextBlock VerticalAlignment="Center" Text="用户 ID:" />
                 <TextBlock
-                    Margin="10,0,30,0"
-                    VerticalAlignment="Center"
-                    Text="用户昵称" />
-                <TextBox
+                    Margin="10,0,0,0"
                     Width="100"
-                    materialDesign:HintAssist.Hint="请输入昵称"
-                    Text="{Binding UserDto.FullName}" />
+                    Text="{Binding Model.UserID, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                    />
             </StackPanel>
-            <StackPanel Margin="30,5" Orientation="Horizontal">
-                <TextBlock
-                    Margin="10,0,30,0"
-                    VerticalAlignment="Center"
-                    Text="手机号" />
+
+            <!-- 用户名输入 -->
+            <StackPanel
+                Margin="20,10"
+                DockPanel.Dock="Top"
+                Orientation="Horizontal">
+                <TextBlock VerticalAlignment="Center" Text="用户名:" />
                 <TextBox
+                    Margin="10,0,0,0"
                     Width="100"
-                    Margin="12,0,0,0"
-                    materialDesign:HintAssist.Hint="请输入手机号"
-                    Text="{Binding UserDto.Phone}" />
+                    Text="{Binding Model.Username, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </StackPanel>
-            <StackPanel Margin="30,5" Orientation="Horizontal">
-                <TextBlock
-                    Margin="10,0,30,0"
-                    VerticalAlignment="Center"
-                    Text="权限" />
+
+          
+            <!-- 全名输入 -->
+            <StackPanel
+                Margin="20,10"
+                DockPanel.Dock="Top"
+                Orientation="Horizontal">
+                <TextBlock VerticalAlignment="Center" Text="全名:" />
+                <TextBox
+                    Margin="10,0,0,0"
+                    Width="100"
+                    Text="{Binding Model.FullName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </StackPanel>
+
+            <!-- 电话输入 -->
+            <StackPanel
+                Margin="20,10"
+                DockPanel.Dock="Top"
+                Orientation="Horizontal">
+                <TextBlock VerticalAlignment="Center" Text="电话:" />
+                <TextBox
+                    Margin="10,0,0,0"
+                    Width="100"
+                    Text="{Binding Model.Phone, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </StackPanel>
+
+            <!-- 角色选择 -->
+            <StackPanel
+                Margin="20,10"
+                DockPanel.Dock="Top"
+                Orientation="Horizontal">
+                <TextBlock VerticalAlignment="Center" Text="角色:" />
                 <ComboBox
-                    Width="100"
-                    Margin="24,0,0,0"
-                    materialDesign:HintAssist.Hint="选择权限"
-                    SelectedIndex="{Binding SelectedRole, Converter={StaticResource IntToRole}, Mode=TwoWay}">
-                    <ComboBoxItem Content="管理员" />
-                    <ComboBoxItem Content="工程师" />
-                    <ComboBoxItem Content="工人" />
-
+                    Margin="10,0,0,0"
+                    SelectedItem="{Binding Model.Role, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="100">
+                    <ComboBoxItem>管理员</ComboBoxItem>
+                    <ComboBoxItem>普通用户</ComboBoxItem>
                 </ComboBox>
             </StackPanel>
+
+            <!-- 头像上传（这里简单用一个文本框提示，实际可能需要更复杂的控件） -->
+            <StackPanel
+                Margin="20,10"
+                DockPanel.Dock="Top"
+                Orientation="Horizontal">
+                <TextBlock VerticalAlignment="Center" Text="头像:" />
+                <TextBox
+                    Margin="10,0,0,0"
+                    Width="200"
+                    IsReadOnly="True"
+                    md:HintAssist.Hint="请选择头像文件" />
+                <Button Content="选择文件" Margin="10,0,0,0"/>
+            </StackPanel>
+
+        </DockPanel>
+
+        <StackPanel
+            Grid.Row="2"
+            Margin="10"
+            HorizontalAlignment="Right"
+            Orientation="Horizontal">
+            <Button
+                Margin="0,0,10,0"
+                Command="{Binding CancelCommand}"
+                Content="取消"
+                Style="{StaticResource MaterialDesignOutlinedButton}" />
+            <Button
+                Command="{Binding SaveChangesCommand}"
+                Content="保存更改"
+                 />
         </StackPanel>
     </Grid>
 </UserControl>

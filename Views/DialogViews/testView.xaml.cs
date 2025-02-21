@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Trace.Views
+namespace Trace.Views.DialogViews
 {
     /// <summary>
-    /// test.xaml 的交互逻辑
+    /// testView.xaml 的交互逻辑
     /// </summary>
-    public partial class test : UserControl
+    public partial class testView : UserControl
     {
-        public test()
+        public testView()
         {
             InitializeComponent();
         }

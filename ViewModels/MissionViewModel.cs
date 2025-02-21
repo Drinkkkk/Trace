@@ -20,11 +20,13 @@ using System.Reflection;
 using Trace.Service.HttpClient;
 using Prism.Commands;
 using Trace.Common;
+using NLog;
 
 namespace Trace.ViewModels
 {
     public class MissionViewModel : NavigationViewModel
     {
+        private static Logger _logger = LogManager.GetCurrentClassLogger();
         #region 属性
         private ObservableCollection<TripDto> trips;
 
@@ -117,12 +119,14 @@ namespace Trace.ViewModels
        
         private readonly ITripService Service;
         private readonly ICoordinateService coordinateService;
+        private readonly IEventAggregator eventAggregator;
 
-        public MissionViewModel(IContainerProvider provider, ITripService Service, ICoordinateService coordinateService) : base(provider)
+        public MissionViewModel(IContainerProvider provider, ITripService Service, ICoordinateService coordinateService,IEventAggregator eventAggregator) : base(provider)
         {
             
             this.Service = Service;
             this.coordinateService = coordinateService;
+            this.eventAggregator = eventAggregator;
             trips = new ObservableCollection<TripDto>();
             Excute = new DelegateCommand<string>(ExcuteCommand);
             SelectedCommand = new DelegateCommand<TripDto>(selected);
@@ -133,7 +137,7 @@ namespace Trace.ViewModels
             query();
         }
 
-        private async void Receive(GeoLocation location)
+        public async void Receive(GeoLocation location)
         {
             
                 var result = await Service.GetFirstorDefaultAsync(location.TripID);
@@ -143,7 +147,9 @@ namespace Trace.ViewModels
                     var result2 = await this.coordinateService.AddAsync(Dto);
                     if (result2.Status)
                     {
-                        if (CurrentDto.TripID == location.TripID)
+                    
+                    
+                    if (CurrentDto != null && CurrentDto.TripID == location.TripID)
                         {
                             Aggregator.SendCoordinates(new CoordinatesInTrip() { Coordinates = new List<CoordinateDto>() { Dto }, Message = "AddNew" });
                         }
@@ -184,8 +190,9 @@ namespace Trace.ViewModels
             finally
             {
                 UpdataLoading(false);
+                eventAggregator.SendMessage("删除成功！");
             }
-
+            _logger.Info($"{AppSession.UserName}删除了日志");
         }
         private async void selected(TripDto dto)
         {
@@ -235,6 +242,7 @@ namespace Trace.ViewModels
                 {
                     trips.Add(item);
                 }
+                eventAggregator.SendMessage("查询成功！");
             }
         }
         private async void save()
@@ -249,12 +257,12 @@ namespace Trace.ViewModels
                     var result = await Service.UpdateAsync(CurrentDto);
                     if (result.Status)
                     {
-                        var truckdto = trips.FirstOrDefault(x => x.TripID.Equals(CurrentDto.TripID));
-                        if (truckdto != null)
+                        var tripdto = trips.FirstOrDefault(x => x.TripID.Equals(CurrentDto.TripID));
+                        if (tripdto != null)
                         {
 
-                            truckdto.Title = CurrentDto.Title;
-                            truckdto.Content = CurrentDto.Content;
+                            tripdto.Title = CurrentDto.Title;
+                            tripdto.Content = CurrentDto.Content;
 
                         }
 
@@ -279,8 +287,8 @@ namespace Trace.ViewModels
             {
                 isRightOpen = false;
                 UpdataLoading(false);
-
-
+                eventAggregator.SendMessage("保存成功！");
+                _logger.Info($"{AppSession.UserName}保存了任务");
             }
 
 
@@ -289,5 +297,10 @@ namespace Trace.ViewModels
         #region 收到MQTT发来的消息
 
         #endregion
+
+
+
+
+
     }
 }

@@ -104,14 +104,7 @@
                 Style="{StaticResource MaterialDesignRaisedLightButton}" 
                 Command="{Binding ReturnCommand}"
                 />
-            <Button
-                Margin="20"
-                Background="#78b8f2"
-                BorderBrush="#78b8f2"
-                Content="添加新用户"
-                DockPanel.Dock="Right"
-                FontSize="14"
-                Style="{StaticResource MaterialDesignRaisedLightButton}" />
+          
         </DockPanel>
         <DataGrid
             Grid.Row="1"
@@ -173,13 +166,13 @@
 
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding Username}"
+                    Binding="{Binding Username,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                     CanUserSort="False"
                     Header="账号" />
                 <!--  Fullname Column  -->
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding FullName}"
+                    Binding="{Binding FullName,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                     CanUserSort="False"
                     Header="姓名" />
 
@@ -187,18 +180,22 @@
                 <!--  Phone Column  -->
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding Phone}"
+                    Binding="{Binding Phone,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                     Header="手机号" />
 
                 <!--  Role Column  -->
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding Role}"
+                    Binding="{Binding Role,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                     CanUserSort="False"
                     Header="权限" />
 
             </DataGrid.Columns>
-
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="CellEditEnding">
+                    <i:InvokeCommandAction Command="{Binding CellEditEndingCommand}" PassEventArgsToCommand="True" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
         </DataGrid>
 
 

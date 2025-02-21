@@ -1,4 +1,6 @@
-﻿using System.Collections.ObjectModel;
+﻿using NLog;
+using Prism.Events;
+using System.Collections.ObjectModel;
 using System.Windows;
 using Trace.Common;
 using Trace.Common.Extensions;
@@ -12,6 +14,7 @@ namespace Trace.ViewModels
     {
 
         #region 属性
+        private static Logger _logger = LogManager.GetCurrentClassLogger();
         private ObservableCollection<TruckDto> trucks;
 
         public ObservableCollection<TruckDto> Trucks
@@ -28,7 +31,7 @@ namespace Trace.ViewModels
             set { isRightOpen = value; RaisePropertyChanged(); }
         }
         private readonly ITruckService Service;
-
+        private readonly IEventAggregator eventAggregator;
         private DelegateCommand<TruckDto> selectecommand;
 
         public DelegateCommand<TruckDto> SelectedCommand
@@ -91,9 +94,10 @@ namespace Trace.ViewModels
         private readonly DialogHostService dialoghostservice;
         #endregion
         //构造函数
-        public TruckViewModel(ITruckService Service, IContainerProvider provider) : base(provider)
+        public TruckViewModel(ITruckService Service, IContainerProvider provider,IEventAggregator eventAggregator) : base(provider)
         {
             this.Service = Service;
+            this.eventAggregator = eventAggregator;
             //query();
             ADD = new DelegateCommand(ad);
             SelectedCommand = new DelegateCommand<TruckDto>(selected);
@@ -124,6 +128,8 @@ namespace Trace.ViewModels
             finally
             {
                 UpdataLoading(false);
+                eventAggregator.SendMessage("删除成功！");
+                _logger.Info($"{AppSession.UserName}删除了货车");
             }
 
         }
@@ -168,6 +174,7 @@ namespace Trace.ViewModels
                 }
             }
             UpdataLoading(false);
+            eventAggregator.SendMessage("查询成功！");
         }
         private async void save()
         {
@@ -213,8 +220,8 @@ namespace Trace.ViewModels
             {
                 isRightOpen = false;
                 UpdataLoading(false);
-
-
+                eventAggregator.SendMessage("保存成功！");
+                _logger.Info($"{AppSession.UserName}保存了货车");
             }
 
 

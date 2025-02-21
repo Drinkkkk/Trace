@@ -9,7 +9,7 @@
     xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
     Width="800"
     Height="450"
-    mc:Ignorable="d">
+    mc:Ignorable="d cv">
     <UserControl.Resources>
         <cv:StringToIntConverter x:Key="StringToInt" />
     </UserControl.Resources>
@@ -27,30 +27,87 @@
             Text="添加货车" />
 
         <DockPanel Grid.Row="1" LastChildFill="False">
+           
+
+            <!-- 车牌输入 -->
+            <StackPanel
+                Margin="20,10"
+                DockPanel.Dock="Top"
+                Orientation="Horizontal">
+                <TextBlock VerticalAlignment="Center" Text="车牌:" />
+                <TextBox
+                    Margin="10,0,0,0"
+                    Width="100"
+                    Text="{Binding Model.LicensePlate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </StackPanel>
+
+            <!-- 车型输入 -->
+            <StackPanel
+                Margin="20,10"
+                DockPanel.Dock="Top"
+                Orientation="Horizontal">
+                <TextBlock VerticalAlignment="Center" Text="车型:" />
+                <TextBox
+                    Margin="10,0,0,0"
+                    Width="100"
+                    Text="{Binding Model.VehicleModel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </StackPanel>
+
+            <!-- 制造商输入 -->
+            <StackPanel
+                Margin="20,10"
+                DockPanel.Dock="Top"
+                Orientation="Horizontal">
+                <TextBlock VerticalAlignment="Center" Text="制造商:" />
+                <TextBox
+                    Margin="10,0,0,0"
+                    Width="100"
+                    Text="{Binding Model.Manufacturer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </StackPanel>
+
+            <!-- 载重能力输入 -->
+            <StackPanel
+                Margin="20,10"
+                DockPanel.Dock="Top"
+                Orientation="Horizontal">
+                <TextBlock VerticalAlignment="Center" Text="载重能力:" />
+                <TextBox
+                    Margin="10,0,0,0"
+                    Width="100"
+                    Text="{Binding Model.LoadCapacity,  Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </StackPanel>
+
+            <!-- 状态选择 -->
             <StackPanel
                 Margin="20,10"
                 DockPanel.Dock="Top"
                 Orientation="Horizontal">
                 <TextBlock VerticalAlignment="Center" Text="状态:" />
-                <ComboBox Margin="10,0,0,0" SelectedIndex="{Binding Model.Status, Converter={StaticResource StringToInt}}">
+                <ComboBox
+                    Margin="10,0,0,0"
+                    SelectedIndex="{Binding Model.Status, Converter={StaticResource StringToInt}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="50">
                     <ComboBoxItem>待办</ComboBoxItem>
                     <ComboBoxItem>已完成</ComboBoxItem>
                 </ComboBox>
             </StackPanel>
 
+            <!-- 货车概要输入 -->
             <TextBox
                 Margin="20,0"
-                md:HintAssist.Hint="请输入待办概要"
+               
+                md:HintAssist.Hint="请输入货车概要"
                 DockPanel.Dock="Top"
-                Text="{Binding Model.Title}" />
+                Text="{Binding Model.Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
+            <!-- 货车内容输入 -->
             <TextBox
-                MinHeight="100"
+                MinHeight="50"
                 Margin="20,10"
-                md:HintAssist.Hint="请输入待办内容"
+               
+                md:HintAssist.Hint="请输入货车内容"
                 AcceptsReturn="True"
                 DockPanel.Dock="Top"
-                Text="{Binding Model.Content}"
+                Text="{Binding Model.Content, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 TextWrapping="Wrap" />
         </DockPanel>
 
@@ -64,7 +121,10 @@
                 Command="{Binding CancelCommand}"
                 Content="取消"
                 Style="{StaticResource MaterialDesignOutlinedButton}" />
-            <Button Command="{Binding SaveCommand}" Content="确定" />
+            <Button
+                Command="{Binding SaveCommand}"
+                Content="确定"
+               />
         </StackPanel>
     </Grid>
 </UserControl>

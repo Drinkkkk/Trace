@@ -85,7 +85,11 @@ namespace Trace.ViewModels
                             }
                         }
                     }
-
+                    Geo.Latitude = 12.3456;
+                    Geo.Longitude = 23.4567;
+                    Geo.TripID = 9;
+                    Geo.TruckID = 38;
+                    Geo.Message = "MQTT";
                     Aggregator.Report(Geo);
                     WriteLog(">>> 消息：" + msg + "，QoS =" + aa.ApplicationMessage.QualityOfServiceLevel + "，客户端=" + aa.ClientId + "，主题：" + aa.ApplicationMessage.Topic);
                 }

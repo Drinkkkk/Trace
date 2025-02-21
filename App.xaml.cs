@@ -3,6 +3,7 @@ using System.Data;
 using System.Windows;
 using MQTTnet.Client;
 using MQTTnet.Extensions.ManagedClient;
+using NLog;
 using Prism.DryIoc;
 using Prism.Ioc;
 using Trace.Common;
@@ -20,11 +21,28 @@ namespace Trace
     /// </summary>
     public partial class App : PrismApplication
     {
+        private static Logger _logger = LogManager.GetCurrentClassLogger();
         protected override Window CreateShell()
         {
             return Container.Resolve<MainView>();
         }
+        public static void LoginOut(IContainerProvider containerProvider)
+        {
+            Current.MainWindow.Hide();
+            _logger.Info($"{AppSession.UserName}登出了");
+            var dialog = containerProvider.Resolve<IDialogService>();
 
+            dialog.ShowDialog("LoginView", callback =>
+            {
+                if (callback.Result != ButtonResult.OK)
+                {
+                    Environment.Exit(0);
+                    return;
+                }
+
+                Current.MainWindow.Show();
+            });
+        }
         protected override void OnInitialized()
         {
             var dialog = Container.Resolve<IDialogService>();
@@ -65,7 +83,7 @@ namespace Trace
             containerRegistry.RegisterForNavigation<MissionView, MissionViewModel>();
             containerRegistry.RegisterForNavigation<SettingView, SettingViewModel>();
             containerRegistry.RegisterForNavigation<UserView, UserViewModel>();
-            containerRegistry.RegisterForNavigation<test, UserViewModel>();
+           
 
 
             //单例  
@@ -75,8 +93,8 @@ namespace Trace
             containerRegistry.Register<IDialogHostService, DialogHostService>();
             containerRegistry.RegisterForNavigation<AddTruckView, AddTruckViewModel>();
             containerRegistry.RegisterForNavigation<MsgView, MsgViewModel>();
-
-
+            containerRegistry.RegisterForNavigation<AddTripView, AddTripViewModel>();
+            containerRegistry.RegisterForNavigation<testView, ViewModels.DialogViewModels.testViewModel>();
             //官方弹窗
             containerRegistry.RegisterDialog<LoginView, LoginViewModel>();
         }

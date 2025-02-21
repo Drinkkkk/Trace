@@ -23,8 +23,9 @@ namespace Trace.Views
         public SettingView()
         {
             InitializeComponent();
+          
         }
 
-     
+        
     }
 }

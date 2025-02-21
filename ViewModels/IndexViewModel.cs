@@ -1,4 +1,5 @@
-﻿using Prism.Dialogs;
+﻿using NLog;
+using Prism.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -7,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xaml;
 using Trace.Common;
+using Trace.Common.Extensions;
 using Trace.Common.Models;
 using Trace.Dto;
 using Trace.Models;
@@ -17,12 +19,14 @@ namespace Trace.ViewModels
 {
     public class IndexViewModel : NavigationViewModel
     {
-
-        public IndexViewModel(IDialogHostService dialog, ITruckService service, IContainerProvider provider, ITripService tripService) : base(provider)
+        private static Logger _logger = LogManager.GetCurrentClassLogger();
+        public IndexViewModel(IDialogHostService dialog, ITruckService service, IContainerProvider provider, ITripService tripService,IEventAggregator eventAggregator) : base(provider)
         {
+            Title = $"你好,{AppSession.UserName},今天是{DateTime.Now.GetDateTimeFormats('D')[1].ToString()}";
             create();
             ExcuteCommand = new DelegateCommand<string>(excute);
             EditTruckCommand = new DelegateCommand<TruckDto>(AddTruck);
+            EditTripCommand= new DelegateCommand<TripDto>(AddTrip);
             CompeleteCommand = new DelegateCommand<TruckDto>(complete);
             NavigateCommand = new DelegateCommand<TaskBar>(navigation);
 
@@ -30,6 +34,7 @@ namespace Trace.ViewModels
             this.service = service;
             this.provider = provider;
             this.tripService = tripService;
+            this.eventAggregator = eventAggregator;
             manager = this.provider.Resolve<IRegionManager>();
         }
 
@@ -56,6 +61,7 @@ namespace Trace.ViewModels
                     Summary.CompletedCount++;
                     summary.CompletedRatio = (Summary.CompletedCount / (double)Summary.Sum).ToString("0%");
                     Refresh();
+                    eventAggregator.SendMessage("货车运输完成！");
                 }
             }
         }
@@ -81,6 +87,7 @@ namespace Trace.ViewModels
                         param.Add("Value", editdot.Result);
                 }
             }
+            //var result = await dialog.ShowDialog("testView", param);
             var result = await dialog.ShowDialog("AddTripView", param);
             if (result.Result == ButtonResult.OK)
             {
@@ -93,6 +100,14 @@ namespace Trace.ViewModels
                         var tripmodel = summary.TripList.FirstOrDefault(x => x.TripID.Equals(result3.Result.TripID));
                         if (tripmodel != null)
                         {
+                            tripmodel.Title = result3.Result.Title;
+                            tripmodel.Content = result3.Result.Content;
+                            tripmodel.TripStatus = result3.Result.TripStatus;
+                            tripmodel.TruckID = result3.Result.TruckID;
+                            tripmodel.TripStartTime = result3.Result.TripStartTime;
+                            tripmodel.TripEndTime = result3.Result.TripEndTime;
+                            tripmodel.ExpectedStartTime = result3.Result.ExpectedStartTime;
+                            tripmodel.ExpectedEndTime = result3.Result.ExpectedEndTime;
 
                         }
                     }
@@ -107,6 +122,8 @@ namespace Trace.ViewModels
                         Refresh();
                     }
                 }
+                eventAggregator.SendMessage("添加/更改任务成功！");
+                _logger.Info("添加/更改任务成功！");
             }
         }
 
@@ -137,6 +154,12 @@ namespace Trace.ViewModels
                         {
                             truckModel.Title = result3.Result.Title;
                             truckModel.Content = result3.Result.Content;
+                            truckModel.Status = result3.Result.Status;
+                            truckModel.LoadCapacity = result3.Result.LoadCapacity;
+                            truckModel.Manufacturer = result3.Result.Manufacturer;
+                            truckModel.VehicleModel = result3.Result.VehicleModel;
+                            truckModel.LicensePlate = result3.Result.LicensePlate;
+
                         }
                     }
 
@@ -153,6 +176,8 @@ namespace Trace.ViewModels
                     }
 
                 }
+                eventAggregator.SendMessage("添加/更改货车成功！");
+                _logger.Info("添加/更改货车成功！");
             }
         }
         void create()
@@ -192,6 +217,7 @@ namespace Trace.ViewModels
         private readonly ITruckService service;
         private readonly IContainerProvider provider;
         private readonly ITripService tripService;
+        private readonly IEventAggregator eventAggregator;
         private readonly IRegionManager manager;
         private DelegateCommand<string> excutecommand;
         public DelegateCommand<string> ExcuteCommand
@@ -205,6 +231,14 @@ namespace Trace.ViewModels
         {
             get { return edittruckcommand; }
             set { edittruckcommand = value; RaisePropertyChanged(); }
+        }
+
+        private DelegateCommand<TripDto> edittripcommand;
+
+        public DelegateCommand<TripDto> EditTripCommand
+        {
+            get { return edittripcommand; }
+            set { edittripcommand = value; RaisePropertyChanged(); }
         }
 
         private DelegateCommand<TruckDto> completecommand;
@@ -231,6 +265,7 @@ namespace Trace.ViewModels
             set { navigateCommand = value; RaisePropertyChanged(); }
         }
 
+        public string Title { get; set; }
         #endregion
 
         public override async void OnNavigatedTo(NavigationContext navigationContext)

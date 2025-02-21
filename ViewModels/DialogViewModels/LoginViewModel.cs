@@ -1,4 +1,6 @@
-﻿using Trace.Common.Extensions;
+﻿using NLog;
+using Trace.Common;
+using Trace.Common.Extensions;
 using Trace.Dto;
 using Trace.Service.IService;
 
@@ -6,6 +8,7 @@ namespace Trace.ViewModels.DialogViewModels
 {
     class LoginViewModel : BindableBase,IDialogAware
     {
+        private static Logger _logger = LogManager.GetCurrentClassLogger();
         public LoginViewModel(IUserService Service, IEventAggregator aggregator)
         {
             UserDto = new RegisterDto();
@@ -102,7 +105,10 @@ namespace Trace.ViewModels.DialogViewModels
 
             if (loginResult != null && loginResult.Status)
             {
+                AppSession.UserName=loginResult.Result.Username;
                 RequestClose.Invoke(ButtonResult.OK);
+                aggregator.SendMessage("登录成功！");
+                _logger.Info($"{AppSession.UserName}登录了");
             }
             else
             {

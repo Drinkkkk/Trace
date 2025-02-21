@@ -5,8 +5,103 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Trace.Views.DialogViews"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800"
+              Width="800"
+              Height="450"
+              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+              xmlns:cv="clr-namespace:Trace.Common.Converters"
+             >
+    <UserControl.Resources>
+        <cv:StringToIntConverter x:Key="StringToInt" />
+    </UserControl.Resources>
     <Grid>
-            
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock
+            Padding="20,10"
+            FontSize="20"
+            FontWeight="Bold"
+            Text="添加行程" />
+
+        <DockPanel Grid.Row="1" LastChildFill="False">
+            <StackPanel
+                Margin="20,10"
+                DockPanel.Dock="Top"
+                Orientation="Horizontal">
+                <TextBlock VerticalAlignment="Center" Text="货车ID:" />
+                <TextBox
+                    Margin="10,0,0,0"
+                    md:HintAssist.Hint="请输入货车ID"
+                    Text="{Binding Model.TruckID}" />
+            </StackPanel>
+
+           
+
+           
+
+            <StackPanel
+                Margin="20,10"
+                DockPanel.Dock="Top"
+                Orientation="Horizontal">
+                <TextBlock VerticalAlignment="Center" Text="行程状态:" />
+                <ComboBox Margin="10,0,0,0" SelectedIndex="{Binding Model.TripStatus, Converter={StaticResource StringToInt}}" Width="60">
+                    <ComboBoxItem>未开始</ComboBoxItem>
+                    <ComboBoxItem>进行中</ComboBoxItem>
+                    <ComboBoxItem>已完成</ComboBoxItem>
+                </ComboBox>
+            </StackPanel>
+
+            <StackPanel
+                Margin="20,10"
+                DockPanel.Dock="Top"
+                Orientation="Horizontal">
+                <TextBlock VerticalAlignment="Center" Text="预计开始时间:" />
+                <DatePicker
+                    Margin="10,0,0,0"
+                    SelectedDate="{Binding Model.ExpectedStartTime}" Width="100" />
+            </StackPanel>
+
+            <StackPanel
+                Margin="20,10"
+                DockPanel.Dock="Top"
+                Orientation="Horizontal">
+                <TextBlock VerticalAlignment="Center" Text="预计结束时间:" />
+                <DatePicker
+                    Margin="10,0,0,0"
+                    SelectedDate="{Binding Model.ExpectedEndTime}" Width="100"/>
+            </StackPanel>
+
+            <TextBox
+                Margin="20,0"
+                md:HintAssist.Hint="请输入行程标题"
+                DockPanel.Dock="Top"
+                Text="{Binding Model.Title}" />
+
+            <TextBox
+                MinHeight="100"
+                Margin="20,10"
+                md:HintAssist.Hint="请输入行程内容"
+                AcceptsReturn="True"
+                DockPanel.Dock="Top"
+                Text="{Binding Model.Content}"
+                TextWrapping="Wrap" />
+        </DockPanel>
+
+        <StackPanel
+            Grid.Row="2"
+            Margin="10"
+            HorizontalAlignment="Right"
+            Orientation="Horizontal">
+            <Button
+                Margin="0,0,10,0"
+                Command="{Binding CancelCommand}"
+                Content="取消"
+                Style="{StaticResource MaterialDesignOutlinedButton}" />
+            <Button Command="{Binding SaveCommand}" Content="确定" />
+        </StackPanel>
     </Grid>
 </UserControl>

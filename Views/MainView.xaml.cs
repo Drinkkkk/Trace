@@ -36,6 +36,10 @@ namespace Trace
                     DialogHost.DialogContent = this.loadingView;
                 }
             });
+            eventAggregator.RegisterMessage(arg =>
+            {
+                Snackbar.MessageQueue.Enqueue(arg.Message);
+            }, "Main");
             btnMin.Click += (s, e) => { this.WindowState = WindowState.Minimized; };
             btnMax.Click += (s, e) =>
             {

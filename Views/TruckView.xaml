@@ -130,7 +130,7 @@
                                 <md:TransitioningContent OpeningEffect="{md:TransitionEffect Kind=ExpandIn}">
                                     <Grid
                                         Width="200"
-                                        Height="150"
+                                        Height="170"
                                         Margin="10">
                                         <i:Interaction.Triggers>
                                             <i:EventTrigger EventName="MouseLeftButtonUp">
@@ -141,18 +141,45 @@
                                             <RowDefinition Height="auto" />
                                             <RowDefinition />
                                         </Grid.RowDefinitions>
+                                    
                                         <TextBlock
                                             Padding="10,5"
                                             Panel.ZIndex="1"
-                                            Text="{Binding Title}" />
+                                            Text="{Binding Title}"  FontSize="15" FontWeight="Bold"/>
                                         <StackPanel
                                             Grid.Row="1"
                                             Panel.ZIndex="1"
                                             Orientation="Vertical">
-                                            <TextBlock Padding="10,5" Text="{Binding Content}" />
-                                            <TextBlock Padding="10,5" Text="{Binding LicensePlate}" />
-                                            <TextBlock Padding="10,5" Text="{Binding VehicleModel}" />
-                                            <TextBlock Padding="10,5" Text="{Binding LoadCapacity}" />
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock Text="卡车ID:" Padding="5"/>
+                                                <TextBlock Text="{Binding TruckID}" Padding="10,5" DockPanel.Dock="Right" />
+                                            </DockPanel>
+
+                                           
+
+                                            <!-- 内容 -->
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock Text="内容:" Padding="5"/>
+                                                <TextBlock Text="{Binding Content}" Padding="10,5" DockPanel.Dock="Right" />
+                                            </DockPanel>
+
+                                            <!-- 车牌 -->
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock Text="车牌:" Padding="5"/>
+                                                <TextBlock Text="{Binding LicensePlate}" Padding="10,5" DockPanel.Dock="Right" />
+                                            </DockPanel>
+
+                                            <!-- 车型 -->
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock Text="车型:" Padding="5"/>
+                                                <TextBlock Text="{Binding VehicleModel}" Padding="10,5" DockPanel.Dock="Right" />
+                                            </DockPanel>
+
+                                            <!-- 载重能力 -->
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock Text="载重能力:" Padding="5"/>
+                                                <TextBlock Text="{Binding LoadCapacity}" Padding="10,5" DockPanel.Dock="Right" />
+                                            </DockPanel>
                                         </StackPanel>
 
 

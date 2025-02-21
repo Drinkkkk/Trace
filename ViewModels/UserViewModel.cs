@@ -1,12 +1,19 @@
-﻿using System;
+﻿using NLog;
+using Prism.Events;
+using RestSharp;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Configuration;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using Trace.Common;
+using Trace.Common.Extensions;
 using Trace.Dto;
 using Trace.Models;
 using Trace.Service.HttpClient;
@@ -20,6 +27,10 @@ namespace Trace.ViewModels
     {
 
         #region 属性
+        public DelegateCommand<DataGridCellEditEndingEventArgs> CellEditEndingCommand { get; private set; }
+
+
+
         private Role role;
 
         public Role SelectedRole
@@ -159,15 +170,52 @@ namespace Trace.ViewModels
 
         #endregion
         private readonly IUserService Service;
-        public UserViewModel(IUserService userService)
+        private readonly IEventAggregator eventAggregator;
+        private static Logger _logger = LogManager.GetCurrentClassLogger();
+        public UserViewModel(IUserService userService,IEventAggregator eventAggregator)
         {
+            CellEditEndingCommand = new DelegateCommand<DataGridCellEditEndingEventArgs>(HandleCellEditEnding);
             UserList = new ObservableCollection<UserDto>();
             QueryCommand = new DelegateCommand<FilterQuery>(Query);
             ReturnCommand = new DelegateCommand(ReturnKey);
             JumpCommand = new DelegateCommand<HandyControl.Data.FunctionEventArgs<int>>(Jump);
             Parameter=new FilterQuery() { pageIndex=0,pageSize=10,search="",Filter="" };
             this.Service = userService;
+            this.eventAggregator = eventAggregator;
             Query(Parameter);
+        }
+
+        private async void HandleCellEditEnding(DataGridCellEditEndingEventArgs e)
+        {
+            if (e.EditAction == DataGridEditAction.Commit)
+            {
+                var editedItem = e.Row.DataContext;
+                var user = editedItem as UserDto;
+
+                if (user != null)
+                {
+                    try
+                    {
+                       var result=await Service.UpdateAsync(user);
+                        if (result.Status)
+                        {
+                            eventAggregator.SendMessage("修改用户信息成功！");
+                            _logger.Info($"{AppSession.UserName}修改了用户信息");
+                            Query(Parameter);
+                        }
+                        else
+                        {
+                            eventAggregator.SendMessage("保存用户信息失败！");
+                           
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        eventAggregator.SendMessage("保存用户信息出错！");
+                        _logger.Info($"{AppSession.UserName}保存用户信息出错");
+                    }
+                }
+            }
         }
 
         private void ReturnKey()
